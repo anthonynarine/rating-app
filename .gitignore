@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+movie_rater_env
 # C extensions
 *.so
 
