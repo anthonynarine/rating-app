@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .models import Movie, Rating
 
 class MovieSerializer(serializers.ModelSerializer):
-    # serialized model functions
+    # serialize model functions
     num_of_ratings = serializers.SerializerMethodField()
     avg_rating = serializers.SerializerMethodField()
     class Meta:
