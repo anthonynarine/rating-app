@@ -1,4 +1,5 @@
 
+from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from .models import Movie, Rating
@@ -14,7 +15,7 @@ class MovieViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=["POST"])
     def test_rate_movie(self, request, pk=None):
         if "stars" in request.data:
-            movie = Movie.objects.get(id=pk)
+            movie = get_object_or_404(Movie, id=pk)
             stars = request.data["stars"]
             user = request.user
             user = User.objects.get(id=1)
@@ -27,8 +28,8 @@ class MovieViewSet(viewsets.ModelViewSet):
                 serializer = RatingSerializer(rating, many=False)
                 response = {"message": "Rating updated", "result": serializer.data}
                 return Response(response, status=status.HTTP_200_OK)
-            except:
-                Rating.objects.create(user=user, movie=movie, stars=stars)
+            except Rating.DoesNotExist:         
+                rating = Rating.objects.create(user=user, movie=movie, stars=stars)
                 serializer = RatingSerializer(rating, many=False)
                 response = {"message": "Rating created", "result": serializer.data}
                 return Response(response, status=status.HTTP_200_OK)
