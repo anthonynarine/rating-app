@@ -23,12 +23,12 @@ const PrimaryAppBar = () => {
       >
         <Link to={"/"} style={{ textDecoration: "none", color: "inherit" }}>
           <Typography
-            variant="h6"
+            variant="h4"
             noWrap
             component="div"
-            sx={{ display: { fontWeight: 700, letterSpacing: "0.5px" } }}
+            sx={{ display: { fontWeight: 600, letterSpacing: "0.5px" } }}
           >
-            Movies
+           Movies
           </Typography>
         </Link>
       </Toolbar>
