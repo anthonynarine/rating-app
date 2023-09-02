@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # 3rd party
     "corsheaders",
+    "drf_spectacular",
     "rest_framework",
     "rest_framework.authtoken",
     #local
@@ -129,5 +130,15 @@ CORS_ALLOWED_ORIGINS = [
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
-    ]
+    ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+#..ADDED..
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Movie Rater API',
+    'DESCRIPTION': 'Add and rate your favorite movie',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    # OTHER SETTINGS
 }
