@@ -3,12 +3,16 @@
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from .models import Movie, Rating
-from .serializers import MovieSerializer, RatingSerializer
+from .serializers import MovieSerializer, RatingSerializer, UserSerializer
 from rest_framework.response import Response
 from django.contrib.auth.models import User
 from rest_framework.authentication import TokenAuthentication
 
 
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    authentication_classes = (TokenAuthentication, )
 class MovieViewSet(viewsets.ModelViewSet):
     queryset = Movie.objects.all()
     serializer_class = MovieSerializer
@@ -24,10 +28,10 @@ class MovieViewSet(viewsets.ModelViewSet):
             print("User:", user)
             print("User:", request.auth)
             # user = User.objects.get(id=1)
-            # print(f"id is {pk}, movie tile, {movie.title}, user: {user}")
-            # if not isinstance(user, User):
-            #     response = {"message": "User must be authenticated to rate movies."}
-            #     return Response(response, status=status.HTTP_401_UNAUTHORIZED)
+            print(f"id is {pk}, movie tile, {movie.title}, user: {user}")
+            if not isinstance(user, User):
+                response = {"message": "User must be authenticated to rate movies."}
+                return Response(response, status=status.HTTP_401_UNAUTHORIZED)
             
             try:
                 rating = Rating.objects.get(user=user, movie=movie.id)
