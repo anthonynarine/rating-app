@@ -4,7 +4,7 @@ import { createTheme, responsiveFontSizes } from "@mui/material";
 export const createMuiTheme = (mode) => {
   let theme = createTheme({
     typography: {
-      fontFamily: ['Teko', "sans-serif"].join(","),
+      fontFamily: ['Teko', "sans-serif", 'Roboto', "sans-serif"].join(","),
       body2: {
         fontWeight: 600,
         letterSpacing: "0.5px",
