@@ -1,28 +1,36 @@
 
-from django.shortcuts import get_object_or_404
+
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from .models import Movie, Rating
 from .serializers import MovieSerializer, RatingSerializer
 from rest_framework.response import Response
 from django.contrib.auth.models import User
+from rest_framework.authentication import TokenAuthentication
 
 
 class MovieViewSet(viewsets.ModelViewSet):
     queryset = Movie.objects.all()
     serializer_class = MovieSerializer
+    authentication_classes = (TokenAuthentication, )
     
     @action(detail=True, methods=["POST"])
-    def test_rate_movie(self, request, pk=None):
+    def rate_movie(self, request, pk=None):
         if "stars" in request.data:
-            movie = get_object_or_404(Movie, id=pk)
+            
+            movie = Movie.objects.get(id=pk)
             stars = request.data["stars"]
             user = request.user
-            user = User.objects.get(id=1)
-            print(f"id is {pk}, movie tile, {movie.title}")
+            print("User:", user)
+            print("User:", request.auth)
+            # user = User.objects.get(id=1)
+            # print(f"id is {pk}, movie tile, {movie.title}, user: {user}")
+            # if not isinstance(user, User):
+            #     response = {"message": "User must be authenticated to rate movies."}
+            #     return Response(response, status=status.HTTP_401_UNAUTHORIZED)
             
             try:
-                rating = Rating.objects.get(user=user.id, movie=movie.id)
+                rating = Rating.objects.get(user=user, movie=movie.id)
                 rating.stars = stars
                 rating.save()
                 serializer = RatingSerializer(rating, many=False)
@@ -39,5 +47,7 @@ class MovieViewSet(viewsets.ModelViewSet):
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
 class RatingViewSet(viewsets.ModelViewSet):
+    
     queryset = Rating.objects.all()
     serializer_class = RatingSerializer
+    authentication_classes = (TokenAuthentication, )
