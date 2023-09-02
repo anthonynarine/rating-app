@@ -29,6 +29,10 @@ class Movie(models.Model):
         else:
             return 0
         
+    def __str__(self):
+        return self.title
+
+        
 
 class Rating(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
@@ -41,3 +45,7 @@ class Rating(models.Model):
 
     class Meta:
         unique_together = (("user", "movie"),)
+        
+        
+    def __str__(self):
+            return f"{self.stars} Stars  -->  {self.movie}"
