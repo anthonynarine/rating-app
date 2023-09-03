@@ -123,10 +123,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #....ADDED...
 CORS_ALLOW_ALL_ORIGINS = False
 
-#....ADDED...
+#....ADDED...DOMAINS ALLOWED TO MAKE REQUEST TO THIS SERVER
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:8000",
-    "http://127.0.0.1:8000",
+    "http://localhost:3000", # React development server
+    "http://127.0.0.1:3000", # Alternative local address for React development server
 ]
 
 

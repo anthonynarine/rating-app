@@ -4,10 +4,12 @@
 /node_modules
 /.pnp
 .pnp.js
-
+# 
+desktop.ini
 # testing
 /coverage
 
+config.js
 # production
 /build
 
