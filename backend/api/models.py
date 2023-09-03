@@ -18,17 +18,16 @@ def movie_icon_upload_path(instance, filename):
 def movie_banner_upload_path(instance, filename):
     return f"movie/{instance.title}/movie_banner/{filename}"
 
-def default_banner_image():
+def default_icon_image():
     return "movie/default/film.png"
     
 
 class Movie(models.Model):
     title = models.CharField(max_length=32)
     description = models.TextField(max_length=360)
-    icon = models.FileField(upload_to=movie_icon_upload_path , null=True, blank=True)
-    banner = models.ImageField(upload_to=movie_banner_upload_path, null=True, blank=True, default=default_banner_image)
+    icon = models.FileField(upload_to=movie_icon_upload_path , null=True, blank=True, default=default_icon_image)
+    banner_img = models.ImageField(upload_to=movie_banner_upload_path, null=True, blank=True)
 
-    
     def save(self, *args, **kwargs):
             """
             Override the save method to delete the previous icon if it's being updated.
@@ -49,6 +48,9 @@ class Movie(models.Model):
                 existing = get_object_or_404(Movie, id=self.id)
                 if existing.icon != self.icon:
                     existing.icon.delete(save=False)
+                if existing.banner_img != self.banner_img:
+                    existing.banner_img.delete(save=False)
+
             super(Movie, self).save(*args, **kwargs)
     
     @receiver(models.signals.pre_delete, sender="api.Movie")
