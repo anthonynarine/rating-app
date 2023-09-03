@@ -5,8 +5,8 @@ import { useTheme } from "@mui/material/styles";
 import { Link } from "react-router-dom";
 import TheaterComedyIcon from "@mui/icons-material/TheaterComedy";
 import MenuIcon from "@mui/icons-material/Menu";
-import { useResponsiveDrawer } from "./hooks/useResponsive";
-import AccountButton from "../helper/AccountButton";
+import { useResponsiveDrawer } from "../hooks/useResponsive";
+import AccountButton from "../../helper/AccountButton";
 
 
 const PrimaryAppBar = () => {
