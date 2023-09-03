@@ -9,17 +9,25 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.dispatch import receiver
 from django.shortcuts import get_object_or_404
 
 def movie_icon_upload_path(instance, filename):
     return f"movie/{instance.title}/movie_icon/{filename}"
-    
 
+def movie_banner_upload_path(instance, filename):
+    return f"movie/{instance.title}/movie_banner/{filename}"
+
+def default_banner_image():
+    return "movie/default/film.png"
+    
 
 class Movie(models.Model):
     title = models.CharField(max_length=32)
     description = models.TextField(max_length=360)
     icon = models.FileField(upload_to=movie_icon_upload_path , null=True, blank=True)
+    banner = models.ImageField(upload_to=movie_banner_upload_path, null=True, blank=True, default=default_banner_image)
+
     
     def save(self, *args, **kwargs):
             """
@@ -43,6 +51,11 @@ class Movie(models.Model):
                     existing.icon.delete(save=False)
             super(Movie, self).save(*args, **kwargs)
     
+    @receiver(models.signals.pre_delete, sender="api.Movie")
+    def delete_movie_files(sender, instance, **kwargs):
+        if instance.icon:
+            instance.icon.delete(save=False)
+    
     def num_of_ratings(self):
         ratings = Rating.objects.filter(movie=self)
         return len(ratings)
@@ -63,7 +76,7 @@ class Movie(models.Model):
         
 
 class Rating(models.Model):
-    movie = models.ForeignKey(Movie, on_delete=models.PROTECT)
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE,)
     stars = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
     created_at = models.DateTimeField(auto_now_add=True)
