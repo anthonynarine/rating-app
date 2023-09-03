@@ -9,11 +9,39 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.shortcuts import get_object_or_404
+
+def movie_icon_upload_path(instance, filename):
+    return f"movie/{instance.title}/movie_icon/{filename}"
+    
 
 
 class Movie(models.Model):
     title = models.CharField(max_length=32)
     description = models.TextField(max_length=360)
+    icon = models.FileField(upload_to=movie_icon_upload_path , null=True, blank=True)
+    
+    def save(self, *args, **kwargs):
+            """
+            Override the save method to delete the previous icon if it's being updated.
+
+            This method is called when saving a Movie instance. It checks if the instance
+            already has an ID (indicating an existing record), then compares the existing
+            icon with the new one. If they're different, it deletes the existing icon
+            and calls the parent class's save method to save the new instance.
+
+            Args:
+                *args: Additional positional arguments.
+                **kwargs: Additional keyword arguments.
+
+            Returns:
+                None
+            """
+            if self.id:
+                existing = get_object_or_404(Movie, id=self.id)
+                if existing.icon != self.icon:
+                    existing.icon.delete(save=False)
+            super(Movie, self).save(*args, **kwargs)
     
     def num_of_ratings(self):
         ratings = Rating.objects.filter(movie=self)
