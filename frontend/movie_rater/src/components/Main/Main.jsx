@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box,  } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import React from "react";
 
@@ -15,11 +15,11 @@ const Main = ({ children }) => {
       }}
     >
       {children}
-      {[...Array(100)].map((_, i) => (
+      {/* {[...Array(100)].map((_, i) => (
             <Typography key={i} paragraph>
               {i + 1}
             </Typography>
-          ))}
+          ))} */}
     </Box>
   );
 };

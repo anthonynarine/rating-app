@@ -3,6 +3,7 @@ import { useTheme } from "@mui/material/styles";
 import React, { useState, useEffect } from "react";
 import MuiDrawer from "@mui/material/Drawer";
 import DrawerToggle from "./DrawerToggle";
+import { useCallback } from "react";
 
 const PrimaryDraw = function ({ children }) {
   const theme = useTheme();
@@ -46,16 +47,22 @@ const PrimaryDraw = function ({ children }) {
     setOpen(!below600sm);
   }, [below600sm]);
 
-  const handleOpenDrawer = () => {
+  //see why these handlerfunctions were created this way NOTES below
+  const handleOpenDrawer = useCallback(() => {
     setOpen(true);
-  };
+  }, []);
 
-  const handleCloseDrawer = () => {
+  const handleCloseDrawer = useCallback(() => {
     setOpen(false);
-  };
+  }, []);
 
   const childrenWithProps = React.Children.map(children, (child) =>
-    React.isValidElement(child) ? React.cloneElement(child, { open }) : child
+  /* this code is iterating 
+    over all the children of a component. For each child 
+    that is a valid React element, it clones the element and
+    injects the open prop into it. If the child is not a valid 
+  React element, it just passes it through unchanged.*/
+  React.isValidElement(child) ? React.cloneElement(child, { open }) : child
   );
 
   return (
@@ -92,4 +99,20 @@ const PrimaryDraw = function ({ children }) {
   );
 };
 
-export default PrimaryDraw;
+export default React.memo(PrimaryDraw);
+
+
+
+
+          ////   useCallback notes
+/* What we did here is wrap each function with useCallback,
+ and provided an array of dependencies. Since these functions
+ don't depend on any external variables, we've provided an empty 
+ array []. This means the functions will retain their identity 
+unless something in that dependency array changes (which in this 
+case, won't happen because it's empty).
+
+By doing this, the functions won't get re-created 
+with every render, which can be beneficial for performance,
+ especially if these functions are passed to child components or
+used in effects with these functions as dependencies. */
