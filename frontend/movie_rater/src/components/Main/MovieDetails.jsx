@@ -1,6 +1,7 @@
 import {
   Container,
   useTheme,
+  IconButton,
   Box,
   Typography,
   Grid,
@@ -14,18 +15,16 @@ import {
   ListItemText,
 } from "@mui/material";
 import { useEffect } from "react";
-import { MEDIA_URL } from "../../config";
 import { Link, useParams } from "react-router-dom";
 import useCrud from "../hooks/useCrud";
-import { MovieDetailsStyles } from "./MovieDetailsStyles";
-import MovieList from "../PrimaryDraw/MovieList";
+// import { MovieDetailsStyles } from "./MovieDetailsStyles";
+import MovieActions from "./MovieActions";
+
 
 const MovieDetail = ({ open }) => {
   const { movieId } = useParams();
   const url = movieId ? `/movies/${movieId}/` : "/movies/";
 
-  const theme = useTheme();
-  const classes = MovieDetailsStyles(theme);
 
   const { dataCRUD, fetchData } = useCrud([], url);
 
@@ -42,7 +41,12 @@ const MovieDetail = ({ open }) => {
   return (
     <>
       <Container maxWidth="lg">
-        <Box sx={{ pt: 4 }}>
+        <Box sx={{ pt: 4 }} >
+          <MovieActions
+            onAdd={() => console.log("Add action")}
+            onEdit={() => console.log("Edit action")}
+            onDelete={() => console.log("Delete action")}
+          />
           <Typography
             variant="h3"
             noWrap
@@ -77,10 +81,10 @@ const MovieDetail = ({ open }) => {
             }}
           >
             {movieId
-              ? `Edit: ${dataCRUD.title}${dataCRUD.avg_rating}`
+              ? `Edit: ${dataCRUD.description}${dataCRUD.avg_rating}`
               : "some of my favorite movies"}
           </Typography>
-          <Grid container spacking={{ xs: 0, sm: 2 }}>
+          <Grid container spacing={{ xs: 0, sm: 2 }}>
             {Array.isArray(dataCRUD) &&
               dataCRUD.map((movie) => (
                 <Grid item key={movie.id} xs={12} sm={3} md={3} lg={3}>
@@ -94,7 +98,7 @@ const MovieDetail = ({ open }) => {
                     }}
                   >
                     <Link
-                      to={`/movies/${movieId}`}
+                      to={`/movies/${movie.id}`}
                       style={{ textDecoration: "none", color: "inherit" }}
                     >
                       <CardMedia
@@ -113,7 +117,11 @@ const MovieDetail = ({ open }) => {
                         }}
                       />
                       <CardContent
-                        sx={{ flexGrow: 1, p: 0, "&:last-child": { paddingBottom: 0 } }}
+                        sx={{
+                          flexGrow: 1,
+                          p: 0,
+                          "&:last-child": { paddingBottom: 0 },
+                        }}
                       >
                         <ListItem disablePadding>
                           <ListItemIcon sx={{ minWidth: "50px" }}>

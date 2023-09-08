@@ -1,13 +1,20 @@
 // components/PrimaryAppBar.js
 import React from "react";
-import { AppBar, Toolbar, Typography, IconButton, Box, Drawer } from "@mui/material";
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  IconButton,
+  Box,
+  Drawer,
+} from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { Link } from "react-router-dom";
 import TheaterComedyIcon from "@mui/icons-material/TheaterComedy";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useResponsiveDrawer } from "../hooks/useResponsive";
 import AccountButton from "../../helper/AccountButton";
-
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 const PrimaryAppBar = () => {
   const theme = useTheme();
@@ -20,6 +27,8 @@ const PrimaryAppBar = () => {
         zIndex: (theme) => theme.zIndex.drawer + 1,
         backgroundColor: theme.palette.background.default,
         borderBottom: `1px solid ${theme.palette.divider}`,
+        display: "flex",
+        justifyContent: "space-between",
       }}
     >
       <Toolbar
@@ -41,7 +50,11 @@ const PrimaryAppBar = () => {
           </IconButton>
         </Box>
 
-        <Drawer anchor="left" open={isDrawerVisible} onClose={toggleDrawer(false)}>
+        <Drawer
+          anchor="left"
+          open={isDrawerVisible}
+          onClose={toggleDrawer(false)}
+        >
           {[...Array(100)].map((_, i) => (
             <Typography key={i} paragraph>
               {i + 1}
@@ -61,7 +74,13 @@ const PrimaryAppBar = () => {
         </Link>
         <TheaterComedyIcon sx={{ marginLeft: "3px" }} />
         <Box sx={{ flexGrow: 1 }}></Box>
-        <AccountButton />
+        <IconButton>
+          <AddCircleIcon Add New />
+        </IconButton>
+        <Box sx={{ flexGrow: 1 }}></Box>
+        <IconButton>
+          <AccountButton />
+        </IconButton>
       </Toolbar>
     </AppBar>
   );

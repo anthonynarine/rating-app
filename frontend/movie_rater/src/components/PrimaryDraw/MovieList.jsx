@@ -13,7 +13,7 @@ import useCrud from "../hooks/useCrud";
 import { useEffect } from "react";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
-import { MEDIA_URL } from "../../config";
+// import { MEDIA_URL } from "../../config";
 import { Link } from "react-router-dom";
 import { MessageListStyles } from "./MovieListStyles";
 import React from "react";

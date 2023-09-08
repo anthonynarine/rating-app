@@ -31,8 +31,26 @@ const useCrud = (initialData, apiURL) => {
             setIsloading(false)
             throw error;               
         }
-    }
-    return {fetchData, dataCRUD, error, isloading}
+    };
+
+    const createData = async (newData) => {
+        setIsloading(true);
+        try {
+            const response = await jwtAxios.post(`${BASE_URL}${apiURL}`, newData);
+            const data = response.data;
+            setDataCrud(prevData => [...prevData, data]); 
+            setError(null);
+            setIsloading(false);
+            return data;
+        } catch (error) {
+            console.error("Error creating data:", error);
+            setIsloading(false);
+            setError(error);
+            throw error;
+        }
+    };
+
+    return {fetchData, dataCRUD, error, isloading, createData}
 
 }
 export default useCrud;
