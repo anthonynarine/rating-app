@@ -1,16 +1,25 @@
 import React, { useState } from 'react';
 import { Button, TextField, Container, Typography } from '@mui/material';
+import { useAuthServices } from '../components/Auth/service/AuthServices';
 
 const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleSubmit = (e) => {
+    const { obtainTokens } = useAuthServices();
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
         
         // Handle login logic here
-        console.log('Username:', username);
-        console.log('Password:', password);
+        try {
+            const tokens = await obtainTokens(username, password);
+            console.log("Access Token:", tokens.access);
+            console.log("Refresh Token:", tokens.refresh);
+            // Store the tokens somewhere (like a context, local storage, or a cookie).
+        } catch (error) {
+            console.error("Error retrieving token:", error);
+        }
     };
 
     return (
