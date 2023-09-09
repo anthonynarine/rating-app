@@ -15,7 +15,7 @@ const PrimaryDraw = function ({ children }) {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
-    overflow: "hidden",
+    overflow: "auto", //enables scroll
   });
 
   const closedMixin = () => ({
@@ -23,7 +23,7 @@ const PrimaryDraw = function ({ children }) {
       easing: theme.transitions.easing.easeIn,
       duration: theme.transitions.duration.leavingScreen,
     }),
-    overflow: "hidden",
+    overflow: "auto",
     width: theme.primaryDraw.closed,
   });
 

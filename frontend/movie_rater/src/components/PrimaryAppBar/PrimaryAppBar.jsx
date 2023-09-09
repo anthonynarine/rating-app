@@ -1,13 +1,6 @@
 // components/PrimaryAppBar.js
-import React from "react";
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  IconButton,
-  Box,
-  Drawer,
-} from "@mui/material";
+import React, { useState } from "react";
+import { AppBar, Toolbar, Typography, IconButton, Box, Drawer } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { Link } from "react-router-dom";
 import TheaterComedyIcon from "@mui/icons-material/TheaterComedy";
@@ -16,10 +9,27 @@ import { useResponsiveDrawer } from "../hooks/useResponsive";
 import AccountButton from "../../helper/AccountButton";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 
+import CreateMovieDialog from "../../helper/CreateMovie";
+
+// needed for Creating new entries. 
+import useCrud from "../hooks/useCrud";
+
 const PrimaryAppBar = () => {
   const theme = useTheme();
 
   const { isDrawerVisible, toggleDrawer } = useResponsiveDrawer();
+// State for controlling the visibility of the create movie dialog.
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  // Function to handle opening the create movie dialog.
+  const handleDialogOpen = () => setIsDialogOpen(true);
+
+  // Function to handle closing the create movie dialog.
+  const handleDialogClose = () => setIsDialogOpen(false);
+
+  // Importing CRUD methods using the useCrud hook.
+  const crudMethods = useCrud([], "/movies/"); // Assuming useCrud hook is imported
+
 
   return (
     <AppBar
@@ -50,11 +60,7 @@ const PrimaryAppBar = () => {
           </IconButton>
         </Box>
 
-        <Drawer
-          anchor="left"
-          open={isDrawerVisible}
-          onClose={toggleDrawer(false)}
-        >
+        <Drawer anchor="left" open={isDrawerVisible} onClose={toggleDrawer(false)}>
           {[...Array(100)].map((_, i) => (
             <Typography key={i} paragraph>
               {i + 1}
@@ -75,7 +81,14 @@ const PrimaryAppBar = () => {
         <TheaterComedyIcon sx={{ marginLeft: "3px" }} />
         <Box sx={{ flexGrow: 1 }}></Box>
         <IconButton>
-          <AddCircleIcon Add New />
+          <AddCircleIcon onClick={handleDialogOpen} />
+                  {/* The CreateMovieDialog component responsible for rendering the form for creating a new movie.
+            It receives the method to actually create the data and methods to control its visibility. */}
+        <CreateMovieDialog
+          open={isDialogOpen}
+          handleClose={handleDialogClose}
+          onCreate={crudMethods.createData}
+        />
         </IconButton>
         <Box sx={{ flexGrow: 1 }}></Box>
         <IconButton>
