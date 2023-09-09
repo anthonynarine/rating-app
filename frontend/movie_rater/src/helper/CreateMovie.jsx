@@ -41,6 +41,7 @@ const CreateMovieDialog = ({ onCreate, open, handleClose }) => {
             });
             handleClose();
             navigate("/")
+            window.location.reload();
         } catch (error) {
             console.error("Error while creating movie:", error);
         }
