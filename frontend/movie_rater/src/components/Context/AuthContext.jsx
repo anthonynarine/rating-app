@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import { useAuthServices } from "../Auth/service/AuthServices";
+import { useAuthServices } from "../Auth/AuthServices";
 
 const AuthContext = createContext({
   // You can add default values or placeholder functions here, if needed
@@ -25,4 +25,4 @@ export function useAuth() {
   return context;
 }
 
-export default AuthProvider; 
+export default AuthProvider;  

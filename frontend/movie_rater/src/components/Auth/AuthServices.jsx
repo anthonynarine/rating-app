@@ -7,21 +7,13 @@ export function useAuthServices() {
         username,
         password,
       });
-
-      if (response.data && response.data.access) {
-        localStorage.setItem("access_token", response.data.access);
-      }
-
-      if (response.data && response.data.refresh) {
-        localStorage.setItem("refresh_token", response.data.refresh);
-      }
-
-      console.log(response);
+      console.log("Data returned by obtainTokens():", response.data);
+      return response.data
     } catch (error) {
       console.log(error);
       throw error;
     }
   };
 
-  return { obtainTokens };
+  return { obtainTokens }
 }
