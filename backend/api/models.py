@@ -1,18 +1,11 @@
-from tkinter import SEL_FIRST
 from django.db import models
-from django.contrib.auth.models import User
-from django.core.validators import MaxValueValidator, MinValueValidator
-
-from django.db import models
-from django.contrib.auth.models import User
-from django.core.validators import MaxValueValidator, MinValueValidator
-from django.db import models
-from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.dispatch import receiver
 from django.shortcuts import get_object_or_404
 from .validators import validate_icon_image_size, validate_image_file_extension
 from .utils import scale_image
+from django.conf import settings
+
 
 
 def movie_icon_upload_path(instance, filename):
@@ -25,6 +18,23 @@ def movie_banner_upload_path(instance, filename):
 
 def default_icon_image():
     return "movie/default/film.png"
+
+
+class Rating(models.Model):
+    movie = models.ForeignKey('Movie', on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+    )
+    stars = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = (("user", "movie"),)
+
+    def __str__(self):
+        return f"{self.stars} Stars  -->  {self.movie}"
+
 
 
 class Movie(models.Model):
@@ -99,20 +109,3 @@ class Movie(models.Model):
         return self.title
 
 
-class Rating(models.Model):
-    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
-    user = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-    )
-    stars = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        unique_together = (("user", "movie"),)
-
-    class Meta:
-        unique_together = (("user", "movie"),)
-
-    def __str__(self):
-        return f"{self.stars} Stars  -->  {self.movie}"

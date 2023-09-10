@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     #local
     "api",
+    "users",
 ]
 
 MIDDLEWARE = [
@@ -107,6 +108,10 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
+
+
+# ... ..ADDED....
+AUTH_USER_MODEL = "users.User"
 
 STATIC_URL = 'static/'
 
