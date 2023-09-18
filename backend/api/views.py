@@ -3,46 +3,47 @@ from rest_framework.decorators import action
 from .models import Movie, Rating
 from .serializers import MovieSerializer, RatingSerializer, UserSerializer
 from rest_framework.response import Response
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from .schema import movie_list_docs, rating_list_docs
+from rest_framework.mixins import ListModelMixin 
+from users.schemas import user_list_docs
+
+# Get the User model
+User = get_user_model()
 
 class UserViewSet(viewsets.ModelViewSet):
     """API endpoint for managing User objects."""
     queryset = User.objects.all()
-    serializer_class = UserSerializer
+    serializer_class = UserSerializer 
+
+    @user_list_docs
+    def list(self, request):
+        user_id = request.query_params.get("user_id")
+        user_instance = User.objects.get(id=user_id)
+        serializer = UserSerializer(user_instance)
+        return Response(serializer.data)
 
 class MovieViewSet(viewsets.ModelViewSet):
-    """API endpoint for managing Movie objects."""
     queryset = Movie.objects.all()
     serializer_class = MovieSerializer
     authentication_classes = [TokenAuthentication]
     permission_classes = [AllowAny]
     
+    @movie_list_docs
+    def list(self, request, *args, **kwargs):
+        return ListModelMixin.list(self, request, *args, **kwargs)
+    
     @action(detail=True, methods=["POST"])
     def rate_movie(self, request, pk=None):
-        """
-        Rate a movie with stars. Requires 'stars' field in request data.
-        
-        Args:
-            request (Request): The HTTP request object.
-            pk (int): The primary key of the movie.
-            
-        Returns:
-            Response: The response containing the result of the rating operation.
-        """
         if "stars" in request.data:
             movie = Movie.objects.get(id=pk)
             stars = request.data["stars"]
             user = request.user
             
-            # Example: Logging user and movie information
             print(f"User: {user}")
             print(f"Movie: {movie.title}, Stars: {stars}")
-            
-            if not isinstance(user, User):
-                response = {"message": "User must be authenticated to rate movies."}
-                return Response(response, status=status.HTTP_401_UNAUTHORIZED)
             
             try:
                 rating = Rating.objects.get(user=user, movie=movie.id)
@@ -59,7 +60,6 @@ class MovieViewSet(viewsets.ModelViewSet):
         else:
             response = {"message": "You need to provide stars"}
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
-        
 
 class RatingViewSet(viewsets.ModelViewSet):
     """API endpoint for managing Rating objects."""
@@ -68,28 +68,14 @@ class RatingViewSet(viewsets.ModelViewSet):
     authentication_classes = [TokenAuthentication]
     permission_classes = [AllowAny]
     
+    @rating_list_docs
+    def list(self, request, *args, **kwargs):
+        return ListModelMixin.list(self, request, *args, **kwargs)
+    
     def update(self, request, *args, **kwargs):
-        """
-        Update operation is not allowed for Ratings.
-        
-        Args:
-            request (Request): The HTTP request object.
-            
-        Returns:
-            Response: The response indicating that the update operation is not allowed.
-        """
         response = {"message": "Cannot update this way"}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
     
     def create(self, request, *args, **kwargs):
-        """
-        Create operation is not allowed for Ratings.
-        
-        Args:
-            request (Request): The HTTP request object.
-            
-        Returns:
-            Response: The response indicating that the create operation is not allowed.
-        """
         response = {"message": "Cannot create this way"}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
