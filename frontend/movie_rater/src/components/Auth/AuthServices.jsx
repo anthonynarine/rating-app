@@ -2,10 +2,28 @@ import axios from "axios";
 
 export function useAuthServices() {
 
-  //Extract the user_id from the token
+  // Request tokens
+  const obtainTokens = async (username, password) => {
+    try {
+      const response = await axios.post("http://127.0.0.1:8000/api/token/", {
+        username,
+        password,
+      });
+
+      const {access, refresh} = response.data;
+
+      console.log("Data returned by obtainTokens():", response.data);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
+
+  // Extract the user_id from the token
   const getUserIdFromToken = (access) => {
     try {
-      const token = access
+      const token = access;
       // Split the token into its components (header, payload, signature)
       const tokenParts = token.split(".");
       if (tokenParts.length !== 3) {
@@ -17,33 +35,35 @@ export function useAuthServices() {
   
       // Parse the payload
       const payloadData = JSON.parse(decodedPayload);
-      const userId = payloadData.user_id
+      const userId = payloadData.user_id;
   
-      return userId
+      return userId;
     } catch (error) {
       console.error("Error extracting user ID from token:", error.message);
       return null; 
     }
   };
-  
-  
-  //Request tokens
-  const obtainTokens = async (username, password) => {
+
+  const getUserDetials = async () => {
     try {
-      const response = await axios.post("http://127.0.0.1:8000/api/token/", {
-        username,
-        password,
-      });
-
-      const {access, refresh} = response.data;
-
-      console.log("Data returned by obtainTokens():", response.data);
-      return response.data
+      const userId = localStorage.getItem("userId");
+      const accessToken = localStorage.getItem("accessToken")
+      const response = await axios.get(
+        `http://127.0.0.1:8000/api/users/?user_id=${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          }
+        });
+      const userDetials = response.data
+      localStorage.setItem("username", userDetials.username)
+      
     } catch (error) {
-      console.log(error);
-      throw error;
+      console.log("Error obtaining user details:", error.message)
+      return error
     }
   };
 
-  return { obtainTokens, getUserIdFromToken }
+
+  return { obtainTokens, getUserIdFromToken, getUserDetials };
 }

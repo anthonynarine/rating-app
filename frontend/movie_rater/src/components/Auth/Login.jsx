@@ -9,7 +9,7 @@ const Login = () => {
 
   const navigate = useNavigate();
 
-  const { obtainTokens, getUserIdFromToken } = useAuthServices();
+  const { obtainTokens, getUserIdFromToken, getUserDetials } = useAuthServices();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,6 +21,7 @@ const Login = () => {
       localStorage.setItem("accessToken", tokens.access)
       localStorage.setItem("refreshToken", tokens.refresh)
       localStorage.setItem("userId", getUserIdFromToken(tokens.access))
+      await getUserDetials();
 
       console.log("Access Token being stored:", tokens.access);
       console.log("Refresh Token being stored:", tokens.refresh);
