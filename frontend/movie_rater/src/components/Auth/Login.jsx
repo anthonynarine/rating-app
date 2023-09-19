@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Button, TextField, Container, Typography } from "@mui/material";
 import { useAuthServices } from "./AuthServices";
 import { useNavigate } from "react-router-dom";
+import { useLogin } from "../Context/LoginContext"; 
 
 
 const Login = () => {
@@ -11,12 +12,8 @@ const Login = () => {
 
   const navigate = useNavigate();
 
-  // const { setIsLoggedIn } = useAuth();
-  const { obtainTokens, getUserIdFromToken, getUserDetials, isLoggedIn, setIsLoggedIn} = useAuthServices();
-
-  useEffect(() => {
-    console.log("isLoggedIn inside Login component changed to:", isLoggedIn);
-  }, [isLoggedIn]);
+  const { obtainTokens, getUserIdFromToken, getUserDetials} = useAuthServices();
+  const { isLoggedIn, setIsLoggedIn, login, logout } = useLogin();
 
 
   const handleSubmit = async (e) => {
@@ -30,7 +27,9 @@ const Login = () => {
       localStorage.setItem("refreshToken", tokens.refresh)
       localStorage.setItem("userId", getUserIdFromToken(tokens.access))
       localStorage.setItem("isLoggedIn", "true")
-      setIsLoggedIn(true)
+      // setIsLoggedIn(true)
+      login()
+      console.log("isLoggedIn =", isLoggedIn)
       await getUserDetials();
 
       console.log("Access Token being stored:", tokens.access);
@@ -39,6 +38,8 @@ const Login = () => {
 
       navigate("/testlogin");
     } catch (error) {
+      // setIsLoggedIn(false)
+      logout()
       console.error("Error retrieving token:", error);
     }
   };

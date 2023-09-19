@@ -2,12 +2,6 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 
 export function useAuthServices() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    console.log("isLoggedIn inside useAuthServices changed to:", isLoggedIn);
-  }, [isLoggedIn]);
-
   // Request tokens
   const obtainTokens = async (username, password) => {
     try {
@@ -65,30 +59,15 @@ export function useAuthServices() {
       );
       const userDetials = response.data;
       localStorage.setItem("username", userDetials.username);
-
-      // setIsLoggedIn(true);
     } catch (error) {
-      // setIsLoggedIn(false)
       console.log("Error obtaining user details:", error.message);
       return error;
     }
-  };
-
-  //Logout clear local storage
-  const logout = () => {
-    setIsLoggedIn(false);
-    localStorage.removeItem("accesstoken");
-    localStorage.removeItem("refreshToken");
-    localStorage.removeItem("userId");
-    localStorage.removeItem("username");
   };
 
   return {
     obtainTokens,
     getUserIdFromToken,
     getUserDetials,
-    logout,
-    isLoggedIn,
-    setIsLoggedIn,
   };
 }

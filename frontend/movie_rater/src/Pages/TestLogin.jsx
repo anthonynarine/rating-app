@@ -1,12 +1,10 @@
 
 
 import React, { useEffect } from "react";
-import { useAuthServices } from "../components/Auth/AuthServices";
-import { useAuth } from "../components/Context/AuthContext";
-
+import { useLogin } from "../components/Context/LoginContext"; 
 
 function TestLogin() {
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn,  } = useLogin();
 
   useEffect(() => {
     console.log("isLoggedIn state in TestLogin:", isLoggedIn);

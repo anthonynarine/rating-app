@@ -2,12 +2,11 @@ import { createContext, useContext, useState } from "react";
 import { useAuthServices } from "../Auth/AuthServices";
 
 const AuthContext = createContext({
-  // You can add default values or placeholder functions here, if needed
-  // isLoggedIn: false,
-  // setIsLoggedIn: () => {}
+  obtainTokens: async () => {},
+  getUserIdFromToken: () => {},
+  getUserDetials: async () => {}
 });
 
-console.log("AuthContext initialized");
 
 export function useAuth() {
   const context = useContext(AuthContext);
