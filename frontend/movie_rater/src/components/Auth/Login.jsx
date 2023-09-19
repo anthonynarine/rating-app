@@ -13,7 +13,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   const { obtainTokens, getUserIdFromToken, getUserDetials} = useAuthServices();
-  const { isLoggedIn, setIsLoggedIn, login, logout } = useLogin();
+  const { isLoggedIn, login, logout } = useLogin();
 
 
   const handleSubmit = async (e) => {
@@ -26,10 +26,10 @@ const Login = () => {
       localStorage.setItem("accessToken", tokens.access)
       localStorage.setItem("refreshToken", tokens.refresh)
       localStorage.setItem("userId", getUserIdFromToken(tokens.access))
-      localStorage.setItem("isLoggedIn", "true")
-      // setIsLoggedIn(true)
+
       login()
-      console.log("isLoggedIn =", isLoggedIn)
+      console.log("YOU LOGGED IN", isLoggedIn)
+
       await getUserDetials();
 
       console.log("Access Token being stored:", tokens.access);
@@ -38,7 +38,6 @@ const Login = () => {
 
       navigate("/testlogin");
     } catch (error) {
-      // setIsLoggedIn(false)
       logout()
       console.error("Error retrieving token:", error);
     }
