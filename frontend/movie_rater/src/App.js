@@ -6,6 +6,7 @@ import { createMuiTheme } from "./theme/theme"; // Corrected import
 import DetailPage from "./Pages/DetailPage";
 import Login from "./components/Auth/Login";
 import { AuthProvider } from "./components/Context/AuthContext";
+import TestLogin from "./Pages/TestLogin";
 
 function App() {
   const theme = createMuiTheme();
@@ -15,6 +16,7 @@ function App() {
       <ThemeProvider theme={theme}>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/testlogin" element={<TestLogin />} />
           <Route path="/login" element={<Login />} />
           <Route path="/movies/:movieId" element={<DetailPage />} />
         </Routes>

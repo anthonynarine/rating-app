@@ -1,6 +1,9 @@
 import axios from "axios";
+import { useState } from "react";
 
 export function useAuthServices() {
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
 
   // Request tokens
   const obtainTokens = async (username, password) => {
@@ -13,8 +16,10 @@ export function useAuthServices() {
       const {access, refresh} = response.data;
 
       console.log("Data returned by obtainTokens():", response.data);
+      setIsLoggedIn(true)
       return response.data;
     } catch (error) {
+      setIsLoggedIn(false)
       console.log(error);
       throw error;
     }
@@ -43,7 +48,7 @@ export function useAuthServices() {
       return null; 
     }
   };
-
+  // Use the userId in localstorage to get get the username
   const getUserDetials = async () => {
     try {
       const userId = localStorage.getItem("userId");
@@ -64,6 +69,14 @@ export function useAuthServices() {
     }
   };
 
+  //Logout clear local storage
+  const logout = () => {
+    setIsLoggedIn(false);
+    localStorage.removeItem("accesstoken");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("username");
+};
 
-  return { obtainTokens, getUserIdFromToken, getUserDetials };
+  return { obtainTokens, getUserIdFromToken, getUserDetials, isLoggedIn, logout };
 }
