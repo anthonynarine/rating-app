@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, TextField, Container, Typography } from "@mui/material";
 import { useAuthServices } from "./AuthServices";
 import { useNavigate } from "react-router-dom";
+
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -10,7 +11,13 @@ const Login = () => {
 
   const navigate = useNavigate();
 
-  const { obtainTokens, getUserIdFromToken, getUserDetials } = useAuthServices();
+  // const { setIsLoggedIn } = useAuth();
+  const { obtainTokens, getUserIdFromToken, getUserDetials, isLoggedIn, setIsLoggedIn} = useAuthServices();
+
+  useEffect(() => {
+    console.log("isLoggedIn inside Login component changed to:", isLoggedIn);
+  }, [isLoggedIn]);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,15 +29,15 @@ const Login = () => {
       localStorage.setItem("accessToken", tokens.access)
       localStorage.setItem("refreshToken", tokens.refresh)
       localStorage.setItem("userId", getUserIdFromToken(tokens.access))
+      localStorage.setItem("isLoggedIn", "true")
+      setIsLoggedIn(true)
       await getUserDetials();
 
       console.log("Access Token being stored:", tokens.access);
       console.log("Refresh Token being stored:", tokens.refresh);
       console.log("getUserIdFromToken:", getUserIdFromToken(tokens.access));
 
-
-      navigate("/");
-      // Store the tokens somewhere (like a context, local storage, or a cookie).
+      navigate("/testlogin");
     } catch (error) {
       console.error("Error retrieving token:", error);
     }

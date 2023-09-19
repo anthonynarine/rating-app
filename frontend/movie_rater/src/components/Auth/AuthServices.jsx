@@ -1,9 +1,12 @@
 import axios from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export function useAuthServices() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  useEffect(() => {
+    console.log("isLoggedIn inside useAuthServices changed to:", isLoggedIn);
+  }, [isLoggedIn]);
 
   // Request tokens
   const obtainTokens = async (username, password) => {
@@ -13,13 +16,12 @@ export function useAuthServices() {
         password,
       });
 
-      const {access, refresh} = response.data;
+      const { access, refresh } = response.data;
 
       console.log("Data returned by obtainTokens():", response.data);
-      setIsLoggedIn(true)
+
       return response.data;
     } catch (error) {
-      setIsLoggedIn(false)
       console.log(error);
       throw error;
     }
@@ -34,38 +36,41 @@ export function useAuthServices() {
       if (tokenParts.length !== 3) {
         throw new Error("Invalid token structure");
       }
-  
+
       // Decode the payload
       const decodedPayload = atob(tokenParts[1]);
-  
+
       // Parse the payload
       const payloadData = JSON.parse(decodedPayload);
       const userId = payloadData.user_id;
-  
+
       return userId;
     } catch (error) {
       console.error("Error extracting user ID from token:", error.message);
-      return null; 
+      return null;
     }
   };
   // Use the userId in localstorage to get get the username
   const getUserDetials = async () => {
     try {
       const userId = localStorage.getItem("userId");
-      const accessToken = localStorage.getItem("accessToken")
+      const accessToken = localStorage.getItem("accessToken");
       const response = await axios.get(
         `http://127.0.0.1:8000/api/users/?user_id=${userId}`,
         {
           headers: {
-            Authorization: `Bearer ${accessToken}`
-          }
-        });
-      const userDetials = response.data
-      localStorage.setItem("username", userDetials.username)
-      
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      const userDetials = response.data;
+      localStorage.setItem("username", userDetials.username);
+
+      // setIsLoggedIn(true);
     } catch (error) {
-      console.log("Error obtaining user details:", error.message)
-      return error
+      // setIsLoggedIn(false)
+      console.log("Error obtaining user details:", error.message);
+      return error;
     }
   };
 
@@ -76,7 +81,14 @@ export function useAuthServices() {
     localStorage.removeItem("refreshToken");
     localStorage.removeItem("userId");
     localStorage.removeItem("username");
-};
+  };
 
-  return { obtainTokens, getUserIdFromToken, getUserDetials, isLoggedIn, logout };
+  return {
+    obtainTokens,
+    getUserIdFromToken,
+    getUserDetials,
+    logout,
+    isLoggedIn,
+    setIsLoggedIn,
+  };
 }

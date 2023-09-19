@@ -12,16 +12,16 @@ function App() {
   const theme = createMuiTheme();
 
   return (
-    <AuthProvider>
-      <ThemeProvider theme={theme}>
+    <ThemeProvider theme={theme}>
+      <AuthProvider>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/testlogin" element={<TestLogin />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/testlogin" element={<TestLogin />} />
           <Route path="/movies/:movieId" element={<DetailPage />} />
         </Routes>
-      </ThemeProvider>
-    </AuthProvider>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 

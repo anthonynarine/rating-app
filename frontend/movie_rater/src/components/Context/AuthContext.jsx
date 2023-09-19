@@ -1,19 +1,13 @@
-import { createContext, useContext } from "react";
+import { createContext, useContext, useState } from "react";
 import { useAuthServices } from "../Auth/AuthServices";
 
 const AuthContext = createContext({
   // You can add default values or placeholder functions here, if needed
+  // isLoggedIn: false,
+  // setIsLoggedIn: () => {}
 });
 
-export function AuthProvider({ children }) {
-  const authServices = useAuthServices();
-
-  return (
-    <AuthContext.Provider value={authServices}>
-      {children}
-    </AuthContext.Provider>
-  );
-}
+console.log("AuthContext initialized");
 
 export function useAuth() {
   const context = useContext(AuthContext);
@@ -24,5 +18,18 @@ export function useAuth() {
   
   return context;
 }
+
+export function AuthProvider({ children }) {
+  // const [isLoggedIn, setIsLoggedIn] = useState(false);
+  console.log("AuthProvider rendered");
+  const authServices = useAuthServices();
+
+  return (
+    <AuthContext.Provider value={authServices}>
+      {children}
+    </AuthContext.Provider>
+  );
+}
+
 
 export default AuthProvider;  
