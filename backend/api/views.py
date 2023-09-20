@@ -4,8 +4,8 @@ from .models import Movie, Rating
 from .serializers import MovieSerializer, RatingSerializer, UserSerializer
 from rest_framework.response import Response
 from django.contrib.auth import get_user_model
-from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from .schema import movie_list_docs, rating_list_docs
 from rest_framework.mixins import ListModelMixin 
 from users.schemas import user_list_docs
@@ -28,8 +28,8 @@ class UserViewSet(viewsets.ModelViewSet):
 class MovieViewSet(viewsets.ModelViewSet):
     queryset = Movie.objects.all()
     serializer_class = MovieSerializer
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [AllowAny]
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticatedOrReadOnly]
     
     @movie_list_docs
     def list(self, request, *args, **kwargs):
@@ -65,8 +65,8 @@ class RatingViewSet(viewsets.ModelViewSet):
     """API endpoint for managing Rating objects."""
     queryset = Rating.objects.all()
     serializer_class = RatingSerializer
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [AllowAny]
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
     
     @rating_list_docs
     def list(self, request, *args, **kwargs):
