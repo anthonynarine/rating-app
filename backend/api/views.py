@@ -28,8 +28,8 @@ class UserViewSet(viewsets.ModelViewSet):
 class MovieViewSet(viewsets.ModelViewSet):
     queryset = Movie.objects.all()
     serializer_class = MovieSerializer
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    # authentication_classes = [JWTAuthentication]
+    # permission_classes = [IsAuthenticatedOrReadOnly]
     
     @movie_list_docs
     def list(self, request, *args, **kwargs):
