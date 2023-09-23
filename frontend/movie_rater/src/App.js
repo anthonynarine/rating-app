@@ -4,7 +4,7 @@ import Home from "./Pages/Home";
 import { ThemeProvider } from "@emotion/react";
 import { createMuiTheme } from "./theme/theme"; // Corrected import
 import DetailPage from "./Pages/DetailPage";
-import Login from "./components/Auth/Login";
+import Login from "./Pages/Login";
 import { AuthProvider } from "./components/Context/AuthContext";
 import { LoginProvider } from "./components/Context/LoginProvider";
 import TestLogin from "./Pages/TestLogin";

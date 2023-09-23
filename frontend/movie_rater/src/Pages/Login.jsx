@@ -1,20 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { Button, TextField, Container, Typography } from "@mui/material";
-import { useAuthServices } from "./AuthServices";
+import { Button, TextField, Container, Typography, Box, useTheme } from "@mui/material";
+import { useAuthServices } from "../components/Auth/AuthServices";
 import { useNavigate } from "react-router-dom";
-import { useLogin } from "../Context/LoginContext"; 
-
+import { useLogin } from "../components/Context/LoginContext";
+import { LoginStyles } from "./LoginStyles";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  
 
   const navigate = useNavigate();
 
-  const { obtainTokens, getUserIdFromToken, getUserDetials} = useAuthServices();
+  const { obtainTokens, getUserIdFromToken, getUserDetials } = useAuthServices();
   const { isLoggedIn, login, logout } = useLogin();
 
+  const theme = useTheme();
+  const classes = LoginStyles(theme);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,13 +23,13 @@ const Login = () => {
     // Handle login logic here
     try {
       const tokens = await obtainTokens(username, password);
-        
-      localStorage.setItem("accessToken", tokens.access)
-      localStorage.setItem("refreshToken", tokens.refresh)
-      localStorage.setItem("userId", getUserIdFromToken(tokens.access))
 
-      login()
-      console.log("YOU LOGGED IN", isLoggedIn)
+      localStorage.setItem("accessToken", tokens.access);
+      localStorage.setItem("refreshToken", tokens.refresh);
+      localStorage.setItem("userId", getUserIdFromToken(tokens.access));
+
+      login();
+      console.log("YOU LOGGED IN", isLoggedIn);
 
       await getUserDetials();
 
@@ -38,47 +39,45 @@ const Login = () => {
 
       navigate("/testlogin");
     } catch (error) {
-      logout()
+      logout();
       console.error("Error retrieving token:", error);
     }
   };
 
   return (
     <Container component="main" maxWidth="xs">
-      <Typography component="h1" variant="h5">
-        Sign in
-      </Typography>
-      <form onSubmit={handleSubmit}>
+      <Box sx={classes.mainBox}>
+        <Typography variant="h5" noWrap component="h1" sx={{ fontWeight: 500, pb: 2 }}>
+          Sign in
+        </Typography>
+        <Box component="form" onSubmit={handleSubmit}>
         <TextField
           variant="outlined"
-          margin="normal"
           required
           fullWidth
           id="username"
-          label="Username"
           name="username"
-          autoComplete="username"
+          label="username"
           autoFocus
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
         <TextField
-          variant="outlined"
           margin="normal"
           required
           fullWidth
+          label="password"
           name="password"
-          label="Password"
           type="password"
           id="password"
-          autoComplete="current-password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <Button type="submit" fullWidth variant="contained" color="primary">
-          Sign In
+        <Button sx={{mt: 1, mb: 2}} disableElevation type="submit" fullWidth variant="contained" color="primary">
+         Login
         </Button>
-      </form>
+      </Box> 
+      </Box>
     </Container>
   );
 };
