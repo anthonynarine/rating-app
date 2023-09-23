@@ -3,36 +3,48 @@ import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../config";
 
 const useAxiosWithInterceptor = () => {
-  // Base URL for the created Axios instance
   const API_BASE_URL = BASE_URL;
-
-  // Create an Axios instance with the base URL
   const jwtAxios = axios.create({ baseURL: API_BASE_URL });
-
-  // Get the `navigate` function from react-router-dom
   const navigate = useNavigate();
 
-  // Add response interceptor
   jwtAxios.interceptors.response.use(
-    (response) => response,
+    (response) => {
+      return response;
+    },
     async (error) => {
       const originalRequest = error.config;
 
-      if (error.response?.status === 401) {
-        // Redirect to home if unauthorized
-        // navigate("/");
+      if (
+        error.response?.status === 401 ||
+        error.response?.status === 403
+      ) {
+        const refreshToken = localStorage.getItem("refreshToken");
+        if (refreshToken) {
+          try {
+            const refreshResponse = await axios.post(
+              "http://127.0.0.1:8000/api/token/refresh/",
+              {
+                refresh: refreshToken,
+              }
+            );
+            const newAccessToken = refreshResponse.data.access;
+            localStorage.setItem("accessToken", newAccessToken);
+            originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
+            
+            // Retry the original request with the new token
+            return jwtAxios(originalRequest);
 
-        // Uncomment the following lines and modify them if you want to handle token refresh and retry logic in the future
-        /*
-        const refreshToken = getRefreshTokenFromSomewhere();
-        const newToken = await refreshTheToken(refreshToken);
-        if (newToken) {
-            originalRequest.headers['Authorization'] = 'Bearer ' + newToken;
-            return jwtAxios(originalRequest);  // retrying the original request with new token
+          } catch (refreshError) {
+            // Handle refresh token failure, e.g., navigate to login or show a message
+            navigate("/login"); // Assuming '/login' is your login route
+            throw refreshError
+          }
+        } else {
+          // Handle no refreshToken available, e.g., navigate to login or show a message
+          navigate("/login");
         }
-        */
       }
-      throw error;
+      throw error
     }
   );
 
