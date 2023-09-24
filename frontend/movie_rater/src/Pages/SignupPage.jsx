@@ -6,7 +6,7 @@ import { useLogin } from "../components/Context/LoginContext";
 import { LoginStyles } from "./LoginStyles";
 import { validateUsername, validatePassword } from "./validators/LoginValidators";
 
-const Login = () => {
+const Signup = () => {
   //  Handles for textfields/inputfields
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -78,7 +78,7 @@ const Login = () => {
             component="h1"
             sx={{ alignItems: "center", fontWeight: 500, pb: 2 }}
           >
-            Sign in
+            Signup
           </Typography>
           {apiError && <Typography color="error">{apiError}</Typography>}
           <Box component="form" onSubmit={handleSubmit} noValidate>
@@ -125,4 +125,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Signup;

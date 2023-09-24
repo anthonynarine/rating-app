@@ -1,4 +1,3 @@
-// theme/theme.js
 import { createTheme, responsiveFontSizes } from "@mui/material";
 
 export const createMuiTheme = (mode) => {
@@ -12,7 +11,6 @@ export const createMuiTheme = (mode) => {
     },
     primaryAppBar: {
       height: 75,
-    //   backgroundColor: "blue"
     },
     primaryDraw: {
       width: 240,
@@ -21,12 +19,48 @@ export const createMuiTheme = (mode) => {
     palette: {
       mode,
     },
-    //overides mui theme
+    // overrides MUI theme
     components: {
       MuiAppBar: {
         defaultProps: {
           color: "default",
           elevation: 0,
+        },
+      },
+      MuiButton: {
+        styleOverrides: {
+          containedPrimary: {
+            backgroundColor: "#B0B0B0", // Ice gray color
+            '&:hover': {
+              backgroundColor: "#78A9D1", // Darker gray for hover state
+            },
+          },
+        },
+      },
+// overides MUI textfield box border color placeholder label color
+      MuiOutlinedInput: {
+        styleOverrides: {
+          root: {
+            '&:hover .MuiOutlinedInput-notchedOutline': {
+              borderColor: '#E0E0E0', // change border color on hover
+            },
+            '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+              borderColor: '#E0E0E0', // change border color when focused
+            },
+          },
+        },
+      },
+// overides MUI textfield onhover 
+      MuiInputLabel: {
+        styleOverrides: {
+          root: {
+            '&:hover': {
+              color: '#B0B0B0', // Change to your desired hover color
+            },
+            '&.Mui-focused': {
+              color: '#0A0F11', // Change to your desired focus color
+            },
+          },
         },
       },
     },

@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { useLogin } from "../components/Context/LoginContext";
 import { Button } from "@mui/material";
 import { useState } from "react";
-import axios from "axios";
 import useAxiosWithInterceptor from "../utility/jwtinterceptor";
 
 function TestLogin() {
