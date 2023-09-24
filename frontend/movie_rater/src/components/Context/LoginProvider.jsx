@@ -1,5 +1,5 @@
 // LoginProvider.js
-
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { LoginContext } from "./LoginContext";
 
@@ -7,6 +7,8 @@ export const LoginProvider = ({ children }) => {
 
     const loggedIn = localStorage.getItem("isLoggedIn") === "true";
     const [isLoggedIn, setIsLoggedIn] = useState(loggedIn)
+
+    const navigate = useNavigate();
 
     const login = () => {
         setIsLoggedIn(true);
@@ -20,6 +22,8 @@ export const LoginProvider = ({ children }) => {
         localStorage.removeItem("refreshToken")
         localStorage.removeItem("userId")
         localStorage.removeItem("username")
+        navigate("/login")
+
     };
 
     return (

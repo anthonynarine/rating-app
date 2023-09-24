@@ -4,10 +4,17 @@ import { useAuthServices } from "../components/Auth/AuthServices";
 import { useNavigate } from "react-router-dom";
 import { useLogin } from "../components/Context/LoginContext";
 import { LoginStyles } from "./LoginStyles";
+import { validateUsername, validatePassword } from "./validators/LoginValidators";
 
 const Login = () => {
+  //  Handles for textfields/inputfields
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  // Handles username and password valitaion error
+  const [usernameError, setUsernameError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [apiError, setApiError] = useState("");
 
   const navigate = useNavigate();
 
@@ -18,31 +25,50 @@ const Login = () => {
   const classes = LoginStyles(theme);
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    // Handle login logic here
-    try {
-      const tokens = await obtainTokens(username, password);
+  // Form validation
+  const usernameErrorMsg = validateUsername(username);
+  const passwordErrorMsg = validatePassword(password);
 
-      localStorage.setItem("accessToken", tokens.access);
-      localStorage.setItem("refreshToken", tokens.refresh);
-      localStorage.setItem("userId", getUserIdFromToken(tokens.access));
+  setUsernameError(usernameErrorMsg);
+  setPasswordError(passwordErrorMsg);
 
-      login();
-      console.log("YOU LOGGED IN", isLoggedIn);
+  // If there's a validation error, we exit the function without proceeding
+  if (usernameErrorMsg || passwordErrorMsg) {
+    return;
+  }
 
-      await getUserDetials();
+  // Handle login logic here
+  try {
+    const tokens = await obtainTokens(username, password);
 
-      console.log("Access Token being stored:", tokens.access);
-      console.log("Refresh Token being stored:", tokens.refresh);
-      console.log("getUserIdFromToken:", getUserIdFromToken(tokens.access));
+    localStorage.setItem("accessToken", tokens.access);
+    localStorage.setItem("refreshToken", tokens.refresh);
+    localStorage.setItem("userId", getUserIdFromToken(tokens.access));
 
-      navigate("/testlogin");
-    } catch (error) {
-      logout();
-      console.error("Error retrieving token:", error);
+    login();
+    console.log("YOU LOGGED IN", isLoggedIn);
+
+    await getUserDetials();
+
+    console.log("Access Token being stored:", tokens.access);
+    console.log("Refresh Token being stored:", tokens.refresh);
+    console.log("getUserIdFromToken:", getUserIdFromToken(tokens.access));
+
+    navigate("/testlogin");
+  } catch (error) {
+    if(error.response && error.response.status === 401){
+      setApiError("Invalid username or password. Please try again")
+    } else {
+      setApiError("An unexpected error occured. Please try again later")
     }
-  };
+    logout();
+    console.error("Error retrieving token:", error);
+  }
+};
+
+
 
   return (
     <Container component="main" maxWidth="xs">
@@ -50,33 +76,45 @@ const Login = () => {
         <Typography variant="h5" noWrap component="h1" sx={{ fontWeight: 500, pb: 2 }}>
           Sign in
         </Typography>
-        <Box component="form" onSubmit={handleSubmit}>
-        <TextField
-          variant="outlined"
-          required
-          fullWidth
-          id="username"
-          name="username"
-          label="username"
-          autoFocus
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <TextField
-          margin="normal"
-          required
-          fullWidth
-          label="password"
-          name="password"
-          type="password"
-          id="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <Button sx={{mt: 1, mb: 2}} disableElevation type="submit" fullWidth variant="contained" color="primary">
-         Login
-        </Button>
-      </Box> 
+        {apiError && <Typography color="error">{apiError}</Typography>}
+        <Box component="form" onSubmit={handleSubmit} noValidate>
+          <TextField
+            variant="outlined"
+            required
+            fullWidth
+            id="username"
+            name="username"
+            label="username"
+            autoFocus
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            error={!!usernameError}
+            helperText={usernameError}
+            />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            label="password"
+            name="password"
+            type="password"
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            error={!!passwordError}
+            helperText={passwordError}
+            />
+          <Button
+            sx={{ mt: 1, mb: 2 }}
+            disableElevation
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+          >
+            Login
+          </Button>
+        </Box>
       </Box>
     </Container>
   );
