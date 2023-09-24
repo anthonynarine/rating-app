@@ -16,8 +16,7 @@ export function useAuthServices() {
 
       return response.data;
     } catch (error) {
-      console.log(error);
-      throw error;
+      throw error
     }
   };
 
