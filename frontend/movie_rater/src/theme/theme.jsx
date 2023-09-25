@@ -30,9 +30,9 @@ export const createMuiTheme = (mode) => {
       MuiButton: {
         styleOverrides: {
           containedPrimary: {
-            backgroundColor: "#B0B0B0", // Ice gray color
+            backgroundColor: "#C3CFE1", // Ice gray color
             '&:hover': {
-              backgroundColor: "#78A9D1", // Darker gray for hover state
+              backgroundColor: "#3A851B", // Darker gray for hover state
             },
           },
         },
@@ -58,7 +58,7 @@ export const createMuiTheme = (mode) => {
               color: '#B0B0B0', // Change to your desired hover color
             },
             '&.Mui-focused': {
-              color: '#0A0F11', // Change to your desired focus color
+              color: 'black', // Change to your desired focus color
             },
           },
         },

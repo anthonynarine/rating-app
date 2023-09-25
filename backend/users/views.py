@@ -1,6 +1,7 @@
 
 from re import U
 from rest_framework import viewsets
+from rest_framework import  generics
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
@@ -9,7 +10,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from .models import User
 from .schemas import user_list_docs
-from .serializers import UserSerializer
+from .serializers import UserSerializer, UserSignupSerializer
 
 class UserViewSet(viewsets.ViewSet):
     """
@@ -69,3 +70,18 @@ class UserViewSet(viewsets.ViewSet):
         except User.DoesNotExist:
             # Raise a "Not Found" error if the user doesn't exist
             raise NotFound(detail="User not found")
+        
+class UserSignupView(generics.CreateAPIView):
+    """
+    generics
+    API endpoint to handle user registration.
+    """
+    queryset = User.objects.all()
+    serializer_class = UserSignupSerializer
+
+    def create(self, request, *args, **kwargs):
+        """
+        Overrides the default create method to send a custom response after registration.
+        """
+        response = super().create(request, *args, **kwargs)
+        return Response({"detail": "User registered successfully."})

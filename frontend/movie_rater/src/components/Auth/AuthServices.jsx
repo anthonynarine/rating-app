@@ -1,11 +1,31 @@
 import axios from "axios";
-import { useState, useEffect } from "react";
 
 export function useAuthServices() {
+
+  const BASE_URL = "http://127.0.0.1:8000"
+  // new user registration
+  const signup = async (username, password, email, confirmPassword) => {
+    try {
+      const response = await axios.post(`${BASE_URL}/api/users/signup/`, {
+        username,
+        email,
+        password,
+        password2: confirmPassword,
+        
+      });
+      console.log("Signup Success Response:", response);
+      return { status: response.status, data: response.data };
+
+    } catch (error) {
+      console.error("Signup Error Response:", error.response);
+      return { status: error.response.status, error: error.response.data };
+    }
+  };
+
   // Request tokens
   const obtainTokens = async (username, password) => {
     try {
-      const response = await axios.post("http://127.0.0.1:8000/api/token/", {
+      const response = await axios.post(`${BASE_URL}/api/token/`, {
         username,
         password,
       });
@@ -49,7 +69,7 @@ export function useAuthServices() {
       const userId = localStorage.getItem("userId");
       const accessToken = localStorage.getItem("accessToken");
       const response = await axios.get(
-        `http://127.0.0.1:8000/api/users/?user_id=${userId}`,
+        `${BASE_URL}/api/users/?user_id=${userId}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -65,8 +85,10 @@ export function useAuthServices() {
   };
 
   return {
+    signup,
     obtainTokens,
     getUserIdFromToken,
     getUserDetials,
+
   };
 }

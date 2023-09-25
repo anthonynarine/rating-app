@@ -4,7 +4,7 @@ import { useAuthServices } from "../components/Auth/AuthServices";
 import { useNavigate } from "react-router-dom";
 import { useLogin } from "../components/Context/LoginContext";
 import { LoginStyles } from "./LoginStyles";
-import { validateUsername, validatePassword } from "./validators/LoginValidators";
+import { validateUsername, validatePasswordLogin } from "./validators/LoginValidators";
 
 const Login = () => {
   //  Handles for textfields/inputfields
@@ -29,7 +29,7 @@ const Login = () => {
 
     // Form validation
     const usernameErrorMsg = validateUsername(username);
-    const passwordErrorMsg = validatePassword(password);
+    const passwordErrorMsg = validatePasswordLogin(password);
 
     setUsernameError(usernameErrorMsg);
     setPasswordError(passwordErrorMsg);
@@ -69,7 +69,7 @@ const Login = () => {
   };
 
   return (
-    <Box sx={{...LoginStyles.bodyBackground}}>
+    <Box sx={{...LoginStyles.body}}>
       <Container component="main" maxWidth="xs" sx={classes.container}>
         <Box sx={classes.loginBox}>
           <Typography

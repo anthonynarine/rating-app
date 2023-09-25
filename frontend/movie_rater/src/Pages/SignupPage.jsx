@@ -5,21 +5,25 @@ import { useNavigate } from "react-router-dom";
 import { useLogin } from "../components/Context/LoginContext";
 import { LoginStyles } from "./LoginStyles";
 import { validateUsername, validatePassword } from "./validators/LoginValidators";
+import { validateEmail } from "./validators/LoginValidators";
 
 const Signup = () => {
   //  Handles for textfields/inputfields
   const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [password2, setPassword2] = useState("");
 
   // Handles username and password valitaion error
   const [usernameError, setUsernameError] = useState("");
+  const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [password2Error, setPassword2Error] = useState("");
   const [apiError, setApiError] = useState("");
 
   const navigate = useNavigate();
 
-  const { obtainTokens, getUserIdFromToken, getUserDetials } = useAuthServices();
-  const { isLoggedIn, login, logout } = useLogin();
+  const { signup } = useAuthServices();
 
   const theme = useTheme();
   const classes = LoginStyles(theme);
@@ -29,47 +33,36 @@ const Signup = () => {
 
     // Form validation
     const usernameErrorMsg = validateUsername(username);
+    const emailErrorMsg = validateEmail(email);
     const passwordErrorMsg = validatePassword(password);
+    const password2ErrorMsg = validatePassword(password2);
 
     setUsernameError(usernameErrorMsg);
+    setEmailError(emailErrorMsg);
     setPasswordError(passwordErrorMsg);
+    setPassword2Error(password2ErrorMsg);
 
     // If there's a validation error, we exit the function without proceeding
-    if (usernameErrorMsg || passwordErrorMsg) {
+    if (usernameErrorMsg || passwordErrorMsg || password2 || emailErrorMsg) {
       return;
     }
 
-    // Handle login logic here
+    // Handle signup logic logic here
     try {
-      const tokens = await obtainTokens(username, password);
+      const response = await signup(username, email, password, password2);
 
-      localStorage.setItem("accessToken", tokens.access);
-      localStorage.setItem("refreshToken", tokens.refresh);
-      localStorage.setItem("userId", getUserIdFromToken(tokens.access));
-
-      login();
-      console.log("YOU LOGGED IN", isLoggedIn);
-
-      await getUserDetials();
-
-      console.log("Access Token being stored:", tokens.access);
-      console.log("Refresh Token being stored:", tokens.refresh);
-      console.log("getUserIdFromToken:", getUserIdFromToken(tokens.access));
-
-      navigate("/testlogin");
+      navigate("/login");
     } catch (error) {
       if (error.response && error.response.status === 401) {
         setApiError("Invalid username or password. Please try again");
       } else {
         setApiError("An unexpected error occured. Please try again later");
       }
-      logout();
-      console.error("Error retrieving token:", error);
     }
   };
 
   return (
-    <Box sx={{...LoginStyles.bodyBackground}}>
+    <Box sx={{ ...LoginStyles.bodyBackground }}>
       <Container component="main" maxWidth="xs" sx={classes.container}>
         <Box sx={classes.loginBox}>
           <Typography
@@ -96,6 +89,19 @@ const Signup = () => {
               helperText={usernameError}
             />
             <TextField
+              variant="outlined"
+              required
+              fullWidth
+              id="email"
+              name="email"
+              label="email"
+              autoFocus
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              error={!!emailError}
+              helperText={emailError}
+            />
+            <TextField
               margin="normal"
               required
               fullWidth
@@ -107,6 +113,19 @@ const Signup = () => {
               onChange={(e) => setPassword(e.target.value)}
               error={!!passwordError}
               helperText={passwordError}
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              label="password2"
+              name="password2"
+              type="password2"
+              id="password2"
+              value={password}
+              onChange={(e) => setPassword2(e.target.value)}
+              error={!!password2Error}
+              helperText={password2Error}
             />
             <Button
               sx={classes.button}
