@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import { Button, TextField, Container, Typography, Box, useTheme } from "@mui/material";
 import { useAuthServices } from "../components/Auth/AuthServices";
 import { useNavigate } from "react-router-dom";
-import { useLogin } from "../components/Context/LoginContext";
 import { LoginStyles } from "./LoginStyles";
-import { validateUsername, validatePassword } from "./validators/LoginValidators";
-import { validateEmail } from "./validators/LoginValidators";
+import {
+  validateSignupPassword,
+  validateEmail,
+} from "./validators/SingupValidators.jsx";
+import { validateUsername } from "./validators/LoginValidators";
 
 const Signup = () => {
   //  Handles for textfields/inputfields
@@ -23,7 +25,7 @@ const Signup = () => {
 
   const navigate = useNavigate();
 
-  const { signup } = useAuthServices();
+  const { signup, obtainTokens } = useAuthServices();
 
   const theme = useTheme();
   const classes = LoginStyles(theme);
@@ -34,22 +36,28 @@ const Signup = () => {
     // Form validation
     const usernameErrorMsg = validateUsername(username);
     const emailErrorMsg = validateEmail(email);
-    const passwordErrorMsg = validatePassword(password);
-    const password2ErrorMsg = validatePassword(password2);
+    const passwordErrorMsg = validateSignupPassword(password, password2);
 
     setUsernameError(usernameErrorMsg);
     setEmailError(emailErrorMsg);
     setPasswordError(passwordErrorMsg);
-    setPassword2Error(password2ErrorMsg);
 
-    // If there's a validation error, we exit the function without proceeding
-    if (usernameErrorMsg || passwordErrorMsg || password2 || emailErrorMsg) {
+    if (usernameErrorMsg || passwordErrorMsg || emailErrorMsg) {
       return;
     }
 
     // Handle signup logic logic here
     try {
       const response = await signup(username, email, password, password2);
+      console.log(response.data);
+
+      // // Token retrieval after successful registration
+      // const tokensResponse = await obtainTokens(username, password);
+
+      // // Extract tokens and store them
+      // const { access, refresh } = tokensResponse;
+      // localStorage.setItem("accessToken", access);
+      // localStorage.setItem("refreshToken", refresh);
 
       navigate("/login");
     } catch (error) {
@@ -90,6 +98,7 @@ const Signup = () => {
             />
             <TextField
               variant="outlined"
+              margin="normal"
               required
               fullWidth
               id="email"
@@ -118,11 +127,11 @@ const Signup = () => {
               margin="normal"
               required
               fullWidth
-              label="password2"
+              label="Confirm Password"
               name="password2"
-              type="password2"
+              type="password"
               id="password2"
-              value={password}
+              value={password2}
               onChange={(e) => setPassword2(e.target.value)}
               error={!!password2Error}
               helperText={password2Error}
@@ -135,7 +144,7 @@ const Signup = () => {
               variant="contained"
               color="primary"
             >
-              Login
+              Register
             </Button>
           </Box>
         </Box>

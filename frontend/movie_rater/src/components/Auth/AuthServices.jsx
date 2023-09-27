@@ -1,21 +1,26 @@
 import axios from "axios";
 
 export function useAuthServices() {
-
-  const BASE_URL = "http://127.0.0.1:8000"
+  const BASE_URL = "http://127.0.0.1:8000";
   // new user registration
-  const signup = async (username, password, email, confirmPassword) => {
+  const signup = async (username, email, password, confirmPassword) => {
     try {
-      const response = await axios.post(`${BASE_URL}/api/users/signup/`, {
-        username,
-        email,
-        password,
-        password2: confirmPassword,
-        
-      });
+      const response = await axios.post(
+        `${BASE_URL}/api/signup/`,
+        {
+          username,
+          email,
+          password,
+          password2: confirmPassword,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
       console.log("Signup Success Response:", response);
       return { status: response.status, data: response.data };
-
     } catch (error) {
       console.error("Signup Error Response:", error.response);
       return { status: error.response.status, error: error.response.data };
@@ -36,7 +41,7 @@ export function useAuthServices() {
 
       return response.data;
     } catch (error) {
-      throw error
+      throw error;
     }
   };
 
@@ -68,16 +73,17 @@ export function useAuthServices() {
     try {
       const userId = localStorage.getItem("userId");
       const accessToken = localStorage.getItem("accessToken");
-      const response = await axios.get(
-        `${BASE_URL}/api/users/?user_id=${userId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      const userDetials = response.data;
-      localStorage.setItem("username", userDetials.username);
+      const response = await axios.get(`http://127.0.0.1:8000/api/users/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      console.log("API Response:", response.data);
+      const userDetails = response.data;
+      console.log("User Details:", userDetails);
+      const username = userDetails.username;
+      console.log("Extracted Username:", username);
+      localStorage.setItem("username", username);
     } catch (error) {
       console.log("Error obtaining user details:", error.message);
       return error;
@@ -89,6 +95,5 @@ export function useAuthServices() {
     obtainTokens,
     getUserIdFromToken,
     getUserDetials,
-
   };
 }

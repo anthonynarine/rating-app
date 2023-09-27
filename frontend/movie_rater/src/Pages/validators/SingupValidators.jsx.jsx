@@ -15,7 +15,7 @@ export const validateEmail = (email) => {
     return "";
 };
 
-export const validatePassword = (password, password2) => {
+export const validateSignupPassword = (password, password2) => {
     if (!password.trim() || !password2.trim()) {
         return "Password is required.";
     }

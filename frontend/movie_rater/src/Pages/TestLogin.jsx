@@ -20,7 +20,7 @@ function TestLogin() {
       const accessToken = localStorage.getItem("accessToken");
 
       const response = await jwtAxios.get(
-        `http://127.0.0.1:8000/api/users/?user_id=${userId}`,
+        `http://127.0.0.1:8000/api/users/${userId}/`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,

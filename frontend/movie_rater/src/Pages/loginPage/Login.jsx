@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Button, TextField, Container, Typography, Box, useTheme } from "@mui/material";
-import { useAuthServices } from "../components/Auth/AuthServices";
+import { useAuthServices } from "../../components/Auth/AuthServices";
 import { useNavigate } from "react-router-dom";
-import { useLogin } from "../components/Context/LoginContext";
-import { LoginStyles } from "./LoginStyles";
-import { validateUsername, validatePasswordLogin } from "./validators/LoginValidators";
+import { useLogin } from "../../components/Context/LoginContext";
+import { LoginStyles } from "../LoginStyles";
+import { validateUsername, validatePasswordLogin } from "../validators/LoginValidators";
 
 const Login = () => {
   //  Handles for textfields/inputfields
@@ -69,7 +69,7 @@ const Login = () => {
   };
 
   return (
-    <Box sx={{...LoginStyles.body}}>
+    <Box sx={{ ...LoginStyles.body }}>
       <Container component="main" maxWidth="xs" sx={classes.container}>
         <Box sx={classes.loginBox}>
           <Typography
@@ -108,16 +108,18 @@ const Login = () => {
               error={!!passwordError}
               helperText={passwordError}
             />
-            <Button
-              sx={classes.button}
-              disableElevation
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-            >
-              Login
-            </Button>
+            {username && password ? (
+              <Button
+                sx={classes.button}
+                disableElevation
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+              >
+                Login
+              </Button>
+            ) : null}
           </Box>
         </Box>
       </Container>
