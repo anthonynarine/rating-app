@@ -22,14 +22,15 @@ export const validateUsername = (username) => {
    * @returns {string} - Returns an error message if the password is invalid,
    *                     otherwise returns an empty string.
    */
-  export const validatePassword = (password) => {
+  export const validatePasswordLogin = (password) => {
     // Check if the password is empty or only contains whitespace
     if (!password.trim()) {
       return "Password is required.";
     }
     return "";
   };
-  
+
+
 
 
 /*  The username.trim() is used to ensure that the username

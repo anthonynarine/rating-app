@@ -1,0 +1,10 @@
+/* Dropdown.css */
+.dropdown-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease-out;
+}
+
+.dropdown-content.open {
+    max-height: 100px; /* adjust based on your content */
+}
