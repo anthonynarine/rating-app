@@ -3,7 +3,7 @@ import { Button, TextField, Container, Typography, Box, useTheme } from "@mui/ma
 import { useAuthServices } from "../../components/Auth/AuthServices";
 import { useNavigate } from "react-router-dom";
 import { useLogin } from "../../components/Context/LoginContext";
-import { LoginStyles } from "../LoginStyles";
+import { LoginStyles } from "./LoginStyles";
 import { validateUsername, validatePasswordLogin } from "../validators/LoginValidators";
 
 const Login = () => {
@@ -56,7 +56,8 @@ const Login = () => {
       console.log("Refresh Token being stored:", tokens.refresh);
       console.log("getUserIdFromToken:", getUserIdFromToken(tokens.access));
 
-      navigate("/testlogin");
+      // navigate("/testlogin");
+      navigate("/");
     } catch (error) {
       if (error.response && error.response.status === 401) {
         setApiError("Invalid username or password. Please try again");

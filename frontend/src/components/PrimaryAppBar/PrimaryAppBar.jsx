@@ -11,14 +11,15 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 import CreateMovieDialog from "../../helper/CreateMovie";
 
-// needed for Creating new entries. 
+// needed for Creating new entries.
 import useCrud from "../hooks/useCrud";
+import LogInOut from "../../helper/LogInOut/LogInOut";
 
 const PrimaryAppBar = () => {
   const theme = useTheme();
 
   const { isDrawerVisible, toggleDrawer } = useResponsiveDrawer();
-// State for controlling the visibility of the create movie dialog.
+  // State for controlling the visibility of the create movie dialog.
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   // Function to handle opening the create movie dialog.
@@ -29,7 +30,6 @@ const PrimaryAppBar = () => {
 
   // Importing CRUD methods using the useCrud hook.
   const crudMethods = useCrud([], "/movies/"); // Assuming useCrud hook is imported
-
 
   return (
     <AppBar
@@ -82,17 +82,18 @@ const PrimaryAppBar = () => {
         <Box sx={{ flexGrow: 1 }}></Box>
         <IconButton>
           <AddCircleIcon onClick={handleDialogOpen} />
-                  {/* The CreateMovieDialog component responsible for rendering the form for creating a new movie.
-            It receives the method to actually create the data and methods to control its visibility. */}
-        <CreateMovieDialog
-          open={isDialogOpen}
-          handleClose={handleDialogClose}
-          onCreate={crudMethods.createData}
-        />
+          <CreateMovieDialog
+            open={isDialogOpen}
+            handleClose={handleDialogClose}
+            onCreate={crudMethods.createData}
+          />
         </IconButton>
-        <Box sx={{ flexGrow: 1 }}></Box>
+        <Box sx={{ flexGrow: 1, marginRight: "1px" }}></Box>
         <IconButton>
-          <AccountButton />
+          <Box sx={{mr: "16px"}} >
+            <AccountButton />
+          </Box>
+          <LogInOut />
         </IconButton>
       </Toolbar>
     </AppBar>

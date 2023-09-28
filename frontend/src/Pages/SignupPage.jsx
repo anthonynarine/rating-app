@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button, TextField, Container, Typography, Box, useTheme } from "@mui/material";
 import { useAuthServices } from "../components/Auth/AuthServices";
 import { useNavigate } from "react-router-dom";
-import { LoginStyles } from "./LoginStyles";
+import { LoginStyles } from "./loginPage/LoginStyles"; 
 import {
   validateSignupPassword,
   validateEmail,

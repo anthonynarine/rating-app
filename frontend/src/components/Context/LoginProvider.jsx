@@ -13,6 +13,7 @@ export const LoginProvider = ({ children }) => {
     const login = () => {
         setIsLoggedIn(true);
         localStorage.setItem("isLoggedIn", "true");
+        navigate("/login")
     };
 
     const logout = () => {

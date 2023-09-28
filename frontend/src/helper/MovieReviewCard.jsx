@@ -13,10 +13,8 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import useCrud from "../components/hooks/useCrud";
-import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
+import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
 import { useNavigate } from "react-router-dom";
-
-
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -38,24 +36,45 @@ export default function MovieReviewCard({ dataCRUD }) {
     setExpanded(!expanded);
   };
 
-
-  const navigate = useNavigate()
-  const { deleteData } = useCrud([], '/movies');
+  const navigate = useNavigate();
+  const { deleteData } = useCrud([], "/movies");
 
   const handleDelete = async (id) => {
-      try {
-          await deleteData(dataCRUD.id);
-          console.log(dataCRUD.id, dataCRUD.title, "DELETED")
-          navigate("/")
-          // Maybe show a success message after deletion
-      } catch (error) {
-          console.error("Failed to delete:", error);
-          // Handle error (maybe show an error message to the user)
-      }
+    try {
+      await deleteData(dataCRUD.id);
+      console.log(dataCRUD.id, dataCRUD.title, "DELETED");
+      navigate("/");
+      // Maybe show a success message after deletion
+    } catch (error) {
+      console.error("Failed to delete:", error);
+      // Handle error (maybe show an error message to the user)
+    }
   };
 
   return (
-    <Card sx={{ maxWidth: 500, minWidth: 500, borderColor: "black"}} elevation={1}>
+    <Card
+    sx={{
+      // Set initial maxWidth (for smaller screens)
+      maxWidth: 300,
+      // Set maxHeight for scrolling on smaller screens
+      maxHeight: 650,
+      overflow: "auto",
+      // Rounded corners to make it look like a book
+      borderRadius: "20px",
+      // Shadow to simulate pages
+      boxShadow: "4px 4px 8px rgba(0, 0, 0, 0.2)",
+      // Light background color like pages of a book
+      background: "#f2f2f2",
+      // CSS media query for larger screens
+      "@media (min-width: 768px)": {
+        // Adjust maxWidth for wider screens
+        maxWidth: 700, // You can adjust this value
+        // Remove maxHeight for wider screens (no scrolling)
+        maxHeight: "none",
+      },
+    }}
+    elevation={0}
+    >
       <CardHeader
         avatar={<Avatar src={icon} aria-label="movie-icon" />}
         action={
@@ -64,12 +83,12 @@ export default function MovieReviewCard({ dataCRUD }) {
           </IconButton>
         }
         title={title}
-        subheader={`Average Rating: ${avg_rating} (${num_of_ratings} ratings)`}
+        subheader={`Average Rating: ${avg_rating} (Rated ${ num_of_ratings} times)`}
       />
       <CardMedia
         component="img"
         height="300"
-        image={banner_img ? banner_img : "https://source.unsplash.com/random/"}
+        image={banner_img ? banner_img : "https://source.unsplash.com/random/?fire"}
         alt="banner image"
       />
       <CardContent>
@@ -79,7 +98,7 @@ export default function MovieReviewCard({ dataCRUD }) {
       </CardContent>
       <CardActions disableSpacing>
         <IconButton aria-label="add to favorites">
-          <FavoriteIcon />
+          Rate moive
         </IconButton>
         <IconButton aria-label="share">
           <DeleteSweepIcon onClick={handleDelete} />

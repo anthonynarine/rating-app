@@ -9,6 +9,8 @@ desktop.ini
 # testing
 /coverage
 
+movie_rating_env
+
 config.js
 # production
 /build
