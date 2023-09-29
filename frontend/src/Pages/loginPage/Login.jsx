@@ -4,7 +4,7 @@ import { useAuthServices } from "../../components/Auth/AuthServices";
 import { useNavigate } from "react-router-dom";
 import { useLogin } from "../../components/Context/LoginContext";
 import { LoginStyles } from "./LoginStyles";
-import { validateUsername, validatePasswordLogin } from "../validators/LoginValidators";
+import { validatePasswordLogin, validateUsername } from "./validators/LoginValidators";
 
 const Login = () => {
   //  Handles for textfields/inputfields

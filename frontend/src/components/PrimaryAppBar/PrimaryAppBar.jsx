@@ -6,14 +6,14 @@ import { Link } from "react-router-dom";
 import TheaterComedyIcon from "@mui/icons-material/TheaterComedy";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useResponsiveDrawer } from "../hooks/useResponsive";
-import AccountButton from "../../helper/AccountButton";
+import AccountButton from "./AccountButton";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 
-import CreateMovieDialog from "../../helper/CreateMovie";
+import CreateMovieDialog from "./CreateMovieDialog";
 
 // needed for Creating new entries.
 import useCrud from "../hooks/useCrud";
-import LogInOut from "../../helper/LogInOut/LogInOut";
+import LogInOut from "./LogInOut";
 
 const PrimaryAppBar = () => {
   const theme = useTheme();

@@ -3,11 +3,9 @@ import { Button, TextField, Container, Typography, Box, useTheme } from "@mui/ma
 import { useAuthServices } from "../components/Auth/AuthServices";
 import { useNavigate } from "react-router-dom";
 import { LoginStyles } from "./loginPage/LoginStyles"; 
-import {
-  validateSignupPassword,
-  validateEmail,
-} from "./validators/SingupValidators.jsx";
-import { validateUsername } from "./validators/LoginValidators";
+import { validateSignupPassword, validateEmail } from "./loginPage/validators/SingupValidators.jsx";
+
+import { validateUsername } from "./loginPage/validators/LoginValidators";
 
 const Signup = () => {
   //  Handles for textfields/inputfields

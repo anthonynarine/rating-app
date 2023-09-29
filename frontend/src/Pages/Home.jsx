@@ -3,7 +3,7 @@ import PrimaryAppBar from "../components/PrimaryAppBar/PrimaryAppBar";
 import PrimaryDraw from "../components/PrimaryDraw/PrimaryDraw";
 import Main from "../components/Main/Main";
 import MovieList from "../components/PrimaryDraw/MovieList";
-import MovieDetail from "../components/Main/MovieDetails";
+import MovieDetail from "../components/Main/MovieDetails/MovieDetails";
 
 const Home = () => {
   return (
