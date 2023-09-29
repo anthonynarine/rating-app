@@ -35,7 +35,7 @@ const MovieCard = ({ movie }) => {
         <CardMedia
           component="img"
           image={
-            movie.banner_img ? movie.banner_img : "https://source.unsplash.com/random/?animal"
+            movie.banner_img ? movie.banner_img : "https://source.unsplash.com/random/?plant"
           }
           alt="random"
           sx={{

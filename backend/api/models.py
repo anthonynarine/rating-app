@@ -7,7 +7,6 @@ from .utils import scale_image
 from django.conf import settings
 
 
-
 def movie_icon_upload_path(instance, filename):
     return f"movie/{instance.title}/movie_icon/{filename}"
 
@@ -21,12 +20,16 @@ def default_icon_image():
 
 
 class Rating(models.Model):
-    movie = models.ForeignKey('Movie', on_delete=models.CASCADE)
+    movie = models.ForeignKey("Movie", on_delete=models.CASCADE)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
     )
-    stars = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
+    stars = models.DecimalField(
+        max_digits=2,
+        decimal_places=1,
+        validators=[MinValueValidator(1), MaxValueValidator(5)],
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -34,7 +37,6 @@ class Rating(models.Model):
 
     def __str__(self):
         return f"{self.stars} Stars  -->  {self.movie}"
-
 
 
 class Movie(models.Model):
@@ -45,7 +47,7 @@ class Movie(models.Model):
         null=True,
         blank=True,
         default=default_icon_image,
-        validators=[ validate_image_file_extension],
+        validators=[validate_image_file_extension],
     )
     banner_img = models.ImageField(
         upload_to=movie_banner_upload_path,
@@ -107,5 +109,3 @@ class Movie(models.Model):
 
     def __str__(self):
         return self.title
-
-

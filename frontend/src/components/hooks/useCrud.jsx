@@ -64,31 +64,37 @@ const useCrud = ([], apiURL) => {
     }
   };
 
-  const rateMoive = async (id, rating) => {
+  const rateMovie = async (movieId, rating) => {
     const accessToken = localStorage.getItem("accessToken");
     setIsloading(true);
     try {
       const response = await jwtAxios.post(
-        `${BASE_URL}${apiURL}${id}`,
-        { rating },
+        `${BASE_URL}${apiURL}`,
+        {
+          movie: movieId,
+          stars: rating,
+        },
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         }
       );
-    console.log("Movie rated", response.data);
-    
-    setIsloading(false);
-    return response.data
+      console.log("Movie rated", response.data);
+
+      setIsloading(false);
+      return response.data;
     } catch (error) {
-    console.error("Error rating movie", error);
-    setIsloading(false)
-    setError(error)
-    throw error
+      console.error("Error rating movie", error);
+      setIsloading(false);
+      setError(error);
+      throw error;
     }
   };
 
-  return { fetchData, dataCRUD, error, isloading, createData, deleteData, rateMoive };
+  return { fetchData, dataCRUD, error, isloading, createData, deleteData, rateMovie };
 };
 export default useCrud;
+
+// to call this hook in a component:
+// const { fetchData, or any function in useCurd } = useCrud([], "/movies/");

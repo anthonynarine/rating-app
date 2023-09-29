@@ -1,5 +1,6 @@
-import React from 'react';
-import StarIcon from '@mui/icons-material/Star';
+import React from "react";
+import { Star } from "@mui/icons-material";
+import StarHalfIcon from '@mui/icons-material/StarHalf';
 
 /**
  * StarRating - A component that displays a number of star icons based on a given rating.
@@ -7,63 +8,58 @@ import StarIcon from '@mui/icons-material/Star';
  * @param {number} rating - The number of stars to be displayed.
  *
  * Example usage:
- * <StarRating rating={3} />
- * This will render 3 star icons.
+ * <StarRating rating={3.5} />
+ * This will render 3.5 stars with one half star.
  */
 const StarRating = ({ rating }) => {
-    // Create an array with a length equivalent to the rating value.
-    // Each item of the array is filled with a `null` placeholder.
-    // For instance, if rating is 3, stars will be [null, null, null].
-    const stars = new Array(rating).fill(null);
+  // Determine the number of full stars and half stars
+  const fullStars = Math.floor(rating);
+  const hasHalfStar = rating % 1 !== 0;
+  
+  // Create an array to store star icons
+  const stars = [];
 
-    // A function to render a single star icon for each placeholder in the stars array.
-    const renderStar = (_, index) => <StarIcon key={index} />;
+  // Render full stars
+  for (let i = 0; i < fullStars; i++) {
+    stars.push(<Star key={`full-star-${i}`} />);
+  }
 
-    return (
-        <div>
-            {/* 
-               Map over the stars array to transform each placeholder into a StarIcon.
-               For a rating of 3, this will render 3 StarIcon components.
-            */}
-            {stars.map(renderStar)}
-        </div>
+  // Render a half star if applicable
+  if (hasHalfStar) {
+    stars.push(
+        <StarHalfIcon key={"half_star"}  />
+    //   <Star key="half-star" style={{ transform: "scale(0.6)" }} />
     );
+  }
+
+  return <div>{stars}</div>;
 };
 
 export default StarRating;
 
 
             // function summery
-/*The line const stars = new Array(rating).fill(null);
- is a way to create an array of a certain length
-(in this case, the length is rating) and fill each 
-of its items with a specific value (null in this instance).
+/*fullStars: This variable calculates the number of full stars
+to be displayed by using the Math.floor function on the rating. 
+For example, if the rating is 3.5, fullStars will be 3.
 
-Here's a step-by-step breakdown:
-new Array(rating):
-This creates a new array with a length of rating.
-If rating is 5, this creates an array of length 5.
-However, this array doesn't have any values in it yet—it's sparse. 
-That is, if you try to .map() over this array immediately after creating it, 
-nothing will happen because there aren't any defined values in the array.
+hasHalfStar: This variable checks if there is a half star by 
+checking if the rating has a decimal value (e.g., 0.5, 1.5, 2.5, etc.). 
+If there's a decimal value, it means a half star should be displayed.
 
-.fill(null):
-To make the array usable (e.g., to be able to .map() over it), 
-we need to fill it with some values. The .fill() method fills 
-every index in the array with the value provided as an argument. 
-In our case, we're filling each index with the value null. 
-The choice of null is arbitrary here; it could be any other value. 
-The important thing is that we're giving the array defined values 
-so that we can then iterate over it.
+stars: This array is used to store the star icons that will be rendered.
+It initially starts as an empty array.
 
-So, after executing const stars = new Array(rating).fill(null);,
-the variable stars holds an array with rating number of items, all 
-of which are null.
+Rendering Full Stars: In a loop, the component iterates fullStars times
+to render the appropriate number of full stars. For each iteration,
+a <Star /> component is added to the stars array. For example,
+if fullStars is 3, three full stars will be added to the stars array.
 
-For example:
+Rendering a Half Star: If hasHalfStar is true, indicating that 
+a half star should be displayed, a <StarHalfIcon /> component is
+added to the stars array. This represents the half star.
 
-If rating is 3, then stars will be [null, null, null].
-If rating is 5, then stars will be [null, null, null, null, null].
-The reason for this construction is to easily create an array of a 
-specific length (determined by the rating) and then use that array
-to generate the corresponding number of star icons. */
+Return: Finally, the component returns a <div> containing all the
+star icons stored in the stars array. The result is a visual 
+representation of the rating, including full stars and a half
+star if applicable. */
